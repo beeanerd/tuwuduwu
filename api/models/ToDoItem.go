@@ -1,16 +1,18 @@
 package models
 
-type ToDoItem struct {
-  Status Status     
-  Name string
-  Date string
-  Type string // Might make this an enum as well
-  Class string
+import (
+	"database/sql"
+	"sync"
+)
+
+type TodoItem struct {
+	Name string `json:"name"`
+	Due  string `json:"due"`
+	Type string `json:"type"`
+	Desc string `json:"desc"`
 }
 
-type Status int64
-const (
-  Not_Started Status = iota
-  Started
-  Finished
-)
+type Todo struct {
+	Mu sync.Mutex `json:"mu"`
+	Db *sql.DB    `json:"db"`
+}

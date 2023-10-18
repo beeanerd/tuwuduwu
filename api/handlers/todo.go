@@ -6,23 +6,23 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/beeanerd/tuwuduwu/database"
 	"github.com/beeanerd/tuwuduwu/models"
 )
 
 func AddTodo(w http.ResponseWriter, r *http.Request) {
+	reqBody, err := io.ReadAll(r.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-  reqBody, err := io.ReadAll(r.Body)
+	var todoItem models.TodoItem
+	json.Unmarshal(reqBody, todoItem)
 
-  if err != nil {
-    log.Fatal(err)
-  }
+	TodoDB, err := database.ConnectDatabase()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-  var todoItem models.ToDoItem
-  json.Unmarshal(reqBody, &todoItem)
-
-
-  /* this populated todoItem with the Request's body, now I will need to add this to some
-  more permanent storage */
-
-
+	database.AddTodoEntry(&todoItem, TodoDB)
 }
